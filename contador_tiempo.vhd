@@ -4,21 +4,18 @@ use IEEE.numeric_std.ALL;
 
 entity Contador_Tiempo is
     Port ( clk, reset, enable, load : in STD_LOGIC;
-           count_out_D : out integer;
-           count_out_U : out integer;
            pay         : out integer
            );
 end Contador_Tiempo;
 
 architecture Behavioral of Contador_Tiempo is
 
-    signal count_reg_1 : integer range 0 to 63;
+    signal count_reg_1 : integer range 0 to 49;
     
 begin
 
     process (clk, reset)
 
-    constant data : integer :=  35;
     variable data_in : STD_LOGIC_VECTOR (5 downto 0);
 
     begin
@@ -34,7 +31,7 @@ begin
                                 
                                 count_reg_1 <= to_integer(unsigned(data_in));
                                 
-                                    if (count_reg_1 = 63) then
+                                    if (count_reg_1 = 49) then
                                         count_reg_1 <= 0;
                                         else
                                             count_reg_1 <= count_reg_1 + 1;
@@ -62,9 +59,6 @@ begin
             if (count_reg_1 mod 5) = 0 then
                 pay <= count_reg_1 / 5;
             end if;
-
-            count_out_D <= count_reg_1 / 10;
-            count_out_U <= count_reg_1 mod 10;
 
     end process;
 
