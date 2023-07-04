@@ -1,67 +1,35 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
-entity Contador_Tiempo is
-    Port ( clk, reset, enable, load : in STD_LOGIC;
-           pay         : out integer
-           );
-end Contador_Tiempo;
+entity contador_tiempo is
+    Port ( clk, reset, enable : in STD_LOGIC;
+            pagos : out integer
+            );
+end contador_tiempo;
 
-architecture Behavioral of Contador_Tiempo is
-
-    signal count_reg_1 : integer range 0 to 49;
-    
+architecture Behavioral of contador_tiempo is
+    signal count_reg : integer range 0 to 30;
+    signal pagar : integer range 0 to 7;
 begin
-
     process (clk, reset)
-
-    variable data_in : STD_LOGIC_VECTOR (5 downto 0);
-
     begin
-
-            if reset = '0' then
-                count_reg_1 <= 0;
-                    
-                elsif (rising_edge(clk)) then
-                
-                    if enable = '1' then
-                        
-                            if load = '1' then
-                                
-                                count_reg_1 <= to_integer(unsigned(data_in));
-                                
-                                    if (count_reg_1 = 49) then
-                                        count_reg_1 <= 0;
-                                        else
-                                            count_reg_1 <= count_reg_1 + 1;
-                                    end if;
-                            end if;
-                    end if;
-                        
-                    if enable = '1' then
-                        
-                        if load = '0' then
-                                
-                            count_reg_1 <= to_integer(unsigned(data_in));
-                        end if;
-                    end if;	
-                            
-                    if enable = '0' then
-                        
-                        if load = '0' then
-                                
-                            count_reg_1 <= to_integer(unsigned(data_in));
-                        end if;
-                    end if;
-            end if;
+        if reset = '0' then
+            count_reg <= 0;
+        elsif enable = '0' then
+            count_reg <= 0;
             
-            if (count_reg_1 mod 5) = 0 then
-                pay <= count_reg_1 / 5;
+        elsif rising_edge(clk) then
+            if enable = '1' then
+                count_reg <= count_reg + 1;
+                if count_reg mod 5 = 0 then
+                    pagar <= pagar + 1;
+                    if count_reg =30 then
+                        count_reg<= 0;
+                    end if;                        
+                end if;
             end if;
-
+        end if;
+        pagos <= pagar;
     end process;
-
-end Behavioral;
-
-
+end architecture;
